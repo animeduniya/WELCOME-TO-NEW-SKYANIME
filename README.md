@@ -1,3 +1,6 @@
+
+
+
 # Anime Episode Streaming Platform
 
 A powerful and customizable video streaming platform to watch anime episodes, complete with subtitle support, intro/outro skip functionality, and a seamless user experience.
@@ -63,11 +66,12 @@ We recommend hosting your project with **[Tohost Cloud Services](https://tohost.
    ```
 
 3. Enjoy streaming your favorite anime episodes.
-### Credits 
+
+### Credits
 Ritesh -  https://github.com/ghoshRitesh12/aniwatch-api
 
-Thank you hianime for inspiring me 
-   
+Thank you hianime for inspiring me
+
 ## Customization
 - Modify the overlay text by editing the `span` element with ID `welcome-text` in the HTML file.
 - Adjust the styling by editing the CSS rules in `<style>` tags or linking an external stylesheet.
@@ -81,4 +85,7 @@ This project is created and maintained by **Siddhartha Tiwari**.
 ## License
 This project is licensed under the [MIT License](LICENSE).
 
----
+## Community
+- [Join our Discord Server](https://discord.gg/cPqs8Vzh)
+- [Follow us on Instagram](https://instagram.com/tohost.in)
+
