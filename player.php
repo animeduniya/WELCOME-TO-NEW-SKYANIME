@@ -39,7 +39,7 @@ if ($response !== false) {
 } else {
     echo "Error fetching API response.";
 }
-
+$episodeSrcs = $data['data'];
 $videoUrl = $data['data']['sources'][0]['url'];
 $subtitles = $data['data']['tracks'][0]['file'];
 $introStart = $data['data']['intro']['start'];
@@ -47,7 +47,7 @@ $introEnd = $data['data']['intro']['end'];
 $outroStart = $data['data']['outro']['start'];
 $outroEnd = $data['data']['outro']['end'];
 
-include 'header.html';
+// include 'header.html';
 ?>
 
 <!DOCTYPE html>
@@ -62,66 +62,34 @@ include 'header.html';
 
 <body>
     <style>
-        <style>
-    /* General Body Styles */
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #141414;
-    color: #f1f1f1;
-}
+        
+        /* General Body Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #f1f1f1;
+        }
 
-/* Header styles (for navigation, if any) */
-header {
-    background-color: #000;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* Video container styling */
-.wrap {
-    position: relative;
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #1f1f1f;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-}
-
-/* Player Styling */
-#player {
-    width: 100%;
-    height: 70vh;
-    background-color: #000;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-    position: relative;
-}
-
-/* Button Styling */
-.wrap .btn {
-    position: absolute;
-    top: 15%;
-    right: 10%;
-    background-color: #4CAF50; /* Green */
-    color: white;
-    font-size: 14px;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    z-index: 10;
-}
-
-.wrap .btn:hover {
-    background-color: #45a049;
-}
-
+        /* Fullscreen Player Styling */
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw; /* Full width of the viewport */
+            height: 100vh; /* Full height of the viewport */
+            background-color: #000;
+            border: none; /* Remove border */
+            box-shadow: none; /* Remove box-shadow */
+            z-index: 1000; /* Ensure the player is on top */
+        }
+   
 /* Media Queries for smaller screens */
 @media screen and (max-width: 768px) {
     #player {
@@ -129,11 +97,6 @@ header {
         width: 50vh;
     }
 
-    .wrap .btn {
-        top: 10%;
-        right: 5%;
-        font-size: 12px;
-    }
 }
 
 /* Subtitle Container Styles (Positioning and Styling) */
@@ -148,7 +111,7 @@ header {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-      /*Hidden initially */
+    display: none;  /*Hidden initially */
 }
 
 #skipIntro:hover {
@@ -166,7 +129,7 @@ header {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-      /*Hidden initially */
+    display:none;  /*Hidden initially */
 }
 
 #skipOutro:hover {
@@ -219,31 +182,15 @@ header {
     border-radius: 5px;
 }
 
-/* Add a loading animation for the video player */
-/*#player:before {*/
-/*    content: "Loading...";*/
-/*    position: absolute;*/
-/*    top: 50%;*/
-/*    left: 50%;*/
-/*    transform: translate(-50%, -50%);*/
-/*    font-size: 20px;*/
-/*    color: #fff;*/
-/*    display: block;*/
-/*    z-index: 20;*/
-/*}*/
 
-    </style>
+
     </style>
     <div class="wrap">
         <div id="player"></div>
         <button id="skipIntro">Skip Intro</button>
         <button id="skipOutro">Skip Outro</button>
 
-        <!-- Add category switch buttons -->
-        <div id="category-switch">
-            <button id="subBtn" class="category-btn">Sub</button>
-            <button id="dubBtn" class="category-btn">Dub</button>
-        </div>
+      
         
     </div>
 
@@ -302,17 +249,21 @@ header {
                 image: "https://anixtv.in/player/anime.jpg",
                 sources: [{ file: `<?php echo $videoUrl; ?>` }],
                 tracks: [
-                    {
-                        file: `<?php echo $englishSubtitleUrl; ?>`,
-                        kind: "captions",
-                        label: "English",
-                        default: true
-                    },
-                    {
-                        file: chaptersVtt,
-                        kind: "chapters"
+                <?php
+                $trackCount = count($episodeSrcs['tracks']);
+                foreach ($episodeSrcs['tracks'] as $index => $track) {
+                    echo "{";
+                    echo "file: \"" . ($track['file'] ? $track['file'] : '') . "\",";
+                    echo "kind: \"" . ($track['kind'] ? $track['kind'] : '') . "\",";
+                    echo "label: \"" . ($track['label'] ? $track['label'] : '') . "\",";
+                    echo "default: " . ($track['default'] ? 'true' : 'false');
+                    echo "}";
+                    if ($index < $trackCount - 1) {
+                        echo ",";
                     }
-                ]
+                }
+               ?>
+            ]
             }]
         });
 
@@ -336,39 +287,56 @@ header {
             playerInstance.seek(skipToTime);
         });
 
-        playerInstance.on("time", function (event) {
-            const currentTime = event.position;
+        playerInstance.on('ready', function () {
+    // Add Skip Intro Button
+    playerInstance.addButton(
+        "https://anito.anixtv.in/images/SkipIntro.png", // URL to the icon image
+        "Skip Intro", // Tooltip text
+        function () {
+            playerInstance.seek(introEnd);
+        },
+        "skip-intro" // Unique identifier for the button
+    );
 
-            if (currentTime >= introStart && currentTime <= introEnd) {
-                skipIntroButton.style.display = "block";
-            } else {
-                skipIntroButton.style.display = "none";
-            }
+    // Add Skip Outro Button
+    playerInstance.addButton(
+        "https://anito.anixtv.in/images/SkipOutro.png", // URL to the icon image
+        "Skip Outro", // Tooltip text
+        function () {
+            const videoDuration = playerInstance.getDuration();
+            const skipToTime = outroEnd >= videoDuration ? videoDuration - 1 : outroEnd;
+            playerInstance.seek(skipToTime);
+        },
+        "skip-outro" // Unique identifier for the button
+    );
 
-            if (currentTime >= outroStart && currentTime <= outroEnd) {
-                skipOutroButton.style.display = "block";
-            } else {
-                skipOutroButton.style.display = "none";
-            }
-        });
+    console.log("Custom buttons added to JW Player!");
+});
 
-        // Function to reload the page with the selected category
-        function switchCategory(newCategory) {
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('category', newCategory);
-            window.location.search = urlParams.toString();
-        }
+// Dynamically show/hide buttons based on current time
+playerInstance.on("time", function (event) {
+    const currentTime = event.position;
 
-        // Event listeners for category buttons
-        subBtn.addEventListener("click", () => switchCategory('sub'));
-        dubBtn.addEventListener("click", () => switchCategory('dub'));
+    const skipIntroButton = document.querySelector(".jw-button-container .jw-skip-intro");
+    const skipOutroButton = document.querySelector(".jw-button-container .jw-skip-outro");
 
-        playerInstance.on("ready", function () {
-            console.log("JW Player is ready!");
-        });
+    // Show or hide Skip Intro button
+    if (currentTime >= introStart && currentTime <= introEnd) {
+        skipIntroButton.style.display = "block";
+    } else {
+        skipIntroButton.style.display = "none";
+    }
+
+    // Show or hide Skip Outro button
+    if (currentTime >= outroStart && currentTime <= outroEnd) {
+        skipOutroButton.style.display = "block";
+    } else {
+        skipOutroButton.style.display = "none";
+    }
+});
     </script>
 
-    <?php include 'footer.html'; ?>
+
 </body>
 
 </html>
