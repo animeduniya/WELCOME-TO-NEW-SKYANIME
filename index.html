@@ -15,7 +15,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            background-color: #000; /* Set background to black */
             overflow: hidden;
             color: #fff;
         }
@@ -67,9 +67,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Anito!</h1>
-        <h2>Start your journey</h2>
+        <h1>Welcome to SkyAnime!</h1>
+        <h2>Developed By Siddhartha Tiwari</h2>
         <a href="home.php" class="home-link">Go to Home Page</a>
     </div>
+    <script>
+        document.querySelector('.home-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            window.location.href = 'home.php';
+        });
+    </script>
 </body>
 </html>
