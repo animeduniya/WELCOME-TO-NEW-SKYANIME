@@ -6,76 +6,73 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Welcome to SkyAnime</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #000; /* Set background to black */
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
             overflow: hidden;
-            color: #fff;
+            color: white;
         }
-
         .container {
             text-align: center;
-            background-color: rgba(0, 0, 0, 0.7);
+            background: rgba(255, 255, 255, 0.1);
             padding: 50px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
             border-radius: 15px;
             backdrop-filter: blur(10px);
-            animation: fadeIn 2s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1.5s ease-in-out;
         }
-
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
+            from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
-
         h1 {
-            font-size: 48px;
-            color: #ff7e5f;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            font-size: 42px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
         }
-
         h2 {
-            font-size: 24px;
-            color: #feb47b;
-            margin-bottom: 20px;
-        }
-
-        .home-link {
-            margin-top: 20px;
             font-size: 20px;
-            color: #ff7e5f;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            border: 2px solid #ff7e5f;
-            background-color: transparent;
-            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            opacity: 0.8;
         }
-
-        .home-link:hover {
-            background-color: #ff7e5f;
+        .home-link {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
             color: white;
+            border-radius: 30px;
+            background: linear-gradient(90deg, #ff6a00, #ee0979);
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.4);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .home-link:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 106, 0, 0.6);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome to SkyAnime!</h1>
-        <h2>Developed By Siddhartha Tiwari</h2>
-        <a href="home.php" class="home-link">Go to Home Page</a>
+        <h2>start</h2>
+        <a class="home-link" onclick="goToHome()">Go to Home Page</a>
     </div>
     <script>
-        document.querySelector('.home-link').addEventListener('click', function(event) {
-            event.preventDefault();
+        function goToHome() {
             window.location.href = 'home.php';
-        });
+        }
     </script>
 </body>
 </html>
